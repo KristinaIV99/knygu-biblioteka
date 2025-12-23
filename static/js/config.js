@@ -1,10 +1,12 @@
 // Backend API Configuration
-// Change this to your backend URL
-const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-    ? 'http://localhost:5123'  // Local development
-    : 'http://localhost:5123'; // Production - CHANGE THIS to your deployed backend URL
+// TAILSCALE setup:
+// - PC (lokaliai): localhost:5123
+// - Telefonas/GitHub Pages: Tailscale IP (100.100.151.123:5123)
 
-// Example for deployed backend:
-// const API_BASE_URL = 'https://your-backend.railway.app';
-// or
-// const API_BASE_URL = 'http://your-server-ip:5123';
+const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? 'http://localhost:5123'              // PC lokaliai (Docker)
+    : 'http://100.100.151.123:5123';       // Telefonas per Tailscale
+
+// Kaip veikia:
+// - Atidari index.html PC → jungiasi prie localhost:5123
+// - Atidari GitHub Pages telefone → jungiasi prie 100.100.151.123:5123 (per Tailscale VPN)
