@@ -1,0 +1,50 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Virtual Environment
+venv/
+env/
+ENV/
+.venv
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Logs
+logs/
+*.log
+nul
+
+# PM2
+ecosystem.config.js
+
+# Claude
+.claude/
+
+# Backups (optional - jei nori commit'inti backups, išimk šią eilutę)
+backups/
+
+# Data files (optional - jei nori commit'inti duomenis, išimk)
+# books.json
+# wishlist.json
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Python specific
+*.pyc
+*.pyo
+*.pyd
+.Python
+pip-log.txt
+pip-delete-this-directory.txt

@@ -1,0 +1,99 @@
+{
+  "_INFO": "Kristinos ir Dariaus knygų bibliotekos schema",
+  "_FLASK_PORT": 5123,
+
+  "book_schema": {
+    "id": "YYYYMMDDHHMMSSffffff (auto)",
+    "title": "string (privalomas)",
+    "seriesNumber": "integer arba null (serijos/tomo numeris)",
+    "author": "string",
+    "authorCountry": "vienas iš author_country_options",
+    "publicationYear": "integer arba null (išleidimo metai)",
+    "category": "vienas iš category_options",
+    "language": "vienas iš language_options",
+    "owner": "vienas iš owner_options",
+    "formats": "array iš format_options (galima pasirinkti kelis)",
+    "read": "boolean",
+    "listened": "boolean (ar išklausyta audio knyga)",
+    "verified": "boolean (ar patikrinta su fizine knyga)",
+    "rating": "1-5 arba null",
+    "startDate": "YYYY-MM-DD arba null",
+    "endDate": "YYYY-MM-DD arba null",
+    "lentTo": "string (kam paskolinta)",
+    "borrowedFrom": "string (iš ko skolinta)",
+    "addedAt": "ISO datetime (auto)"
+  },
+
+  "format_options": {
+    "paper": "📖 Popierinė",
+    "audio": "🎧 Audio",
+    "ebook-md": "📝 MD",
+    "ebook-pdf": "📄 PDF",
+    "ebook-epub": "📱 EPUB"
+  },
+
+  "category_options": [
+    "Grožinė",
+    "Detektyvas",
+    "Fantastika",
+    "Biografija",
+    "Psichologija",
+    "Savišvieta",
+    "Istorija",
+    "Kita"
+  ],
+
+  "language_options": {
+    "lt": "🇱🇹 Lietuvių",
+    "sv": "🇸🇪 Švedų",
+    "en": "🇬🇧 Anglų",
+    "other": "🌍 Kita"
+  },
+
+  "owner_options": {
+    "kristina": "👩 Kristina",
+    "darius": "👨 Darius",
+    "skolinta": "📥 Skolinta"
+  },
+
+  "author_country_options": {
+    "us": "🇺🇸 JAV",
+    "se": "🇸🇪 Švedija",
+    "gb": "🇬🇧 Jungtinė Karalystė",
+    "ru": "🇷🇺 Rusija",
+    "de": "🇩🇪 Vokietija",
+    "es": "🇪🇸 Ispanija",
+    "dk": "🇩🇰 Danija",
+    "no": "🇳🇴 Norvegija",
+    "it": "🇮🇹 Italija",
+    "ie": "🇮🇪 Airija",
+    "lb": "🇱🇧 Libanas",
+    "ca": "🇨🇦 Kanada",
+    "lt": "🇱🇹 Lietuva",
+    "pl": "🇵🇱 Lenkija",
+    "fr": "🇫🇷 Prancūzija",
+    "jp": "🇯🇵 Japonija",
+    "other": "🌍 Kita"
+  },
+
+  "example_book": {
+    "id": "20241202153045123456",
+    "title": "Altorių šešėly",
+    "seriesNumber": null,
+    "author": "Vincas Mykolaitis-Putinas",
+    "authorCountry": "lt",
+    "publicationYear": 1933,
+    "category": "Grožinė",
+    "language": "lt",
+    "owner": "kristina",
+    "formats": ["paper", "audio"],
+    "read": true,
+    "verified": true,
+    "rating": 5,
+    "startDate": "2024-01-15",
+    "endDate": "2024-02-10",
+    "lentTo": "",
+    "borrowedFrom": "",
+    "addedAt": "2024-12-02T15:30:45.123456"
+  }
+}

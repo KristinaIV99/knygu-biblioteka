@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📚 Knygų Biblioteka</title>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+    <meta name="theme-color" content="#f4d03f">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Knygos">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📚 Knygų Biblioteka</h1>
+        </header>
+
+        <!-- Language Filter Buttons -->
+        <div class="language-buttons">
+            <button class="lang-btn active" data-lang="">Visos</button>
+            <button class="lang-btn" data-lang="lt">🇱🇹 LT</button>
+            <button class="lang-btn" data-lang="sv">🇸🇪 SE</button>
+            <button class="lang-btn" data-lang="en">🇬🇧 GB</button>
+            <button class="lang-btn" data-lang="ru">🇷🇺 RU</button>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-line">
+            <div class="stat">
+                <span class="stat-label">📖 Skaityta:</span>
+                <span class="stat-value" id="statPaperRead">0</span>/<span id="statPaperTotal">0</span>
+            </div>
+            <span class="divider">•</span>
+            <div class="stat">
+                <span class="stat-label">🎧 Klausyta:</span>
+                <span class="stat-value" id="statListened">0</span>/<span id="statAudioTotal">0</span>
+            </div>
+        </div>
+
+        <!-- Owner Stats -->
+        <div class="owner-stats">
+            <div class="owner-card kristina">
+                <span class="owner-name">👩 Kristina</span>
+                <span class="owner-info" id="statKristinaInfo">-</span>
+            </div>
+            <div class="owner-card darius">
+                <span class="owner-name">👨 Darius</span>
+                <span class="owner-info" id="statDariusInfo">-</span>
+            </div>
+            <div class="owner-card skolinta">
+                <span class="owner-name">📥 Skolinta</span>
+                <span class="owner-info" id="statSkolintaInfo">-</span>
+            </div>
+        </div>
+
+        <!-- All Statistics (Collapsible) -->
+        <div class="stats-section" id="allStatsSection">
+            <div class="stats-header" id="allStatsHeader">
+                <span>📊 Statistika</span>
+                <span class="toggle">▼</span>
+            </div>
+            <div class="stats-content" id="allStatsContent">
+                <div class="stats-grid">
+                    <!-- Formats Section -->
+                    <div class="stat-card" id="formatStatsSection" style="display: none;">
+                        <div class="stat-card-title">📊 Formatai</div>
+                        <div class="stat-items">
+                            <div class="stat-item" id="statFormatPaper" style="display:none;">
+                                <span class="stat-icon">📖</span>
+                                <span class="stat-value">0</span>
+                            </div>
+                            <div class="stat-item" id="statFormatAudio" style="display:none;">
+                                <span class="stat-icon">🎧</span>
+                                <span class="stat-value">0</span>
+                            </div>
+                            <div class="stat-item" id="statFormatMd" style="display:none;">
+                                <span class="stat-icon">📝</span>
+                                <span class="stat-value">0</span>
+                            </div>
+                            <div class="stat-item" id="statFormatPdf" style="display:none;">
+                                <span class="stat-icon">📄</span>
+                                <span class="stat-value">0</span>
+                            </div>
+                            <div class="stat-item" id="statFormatEpub" style="display:none;">
+                                <span class="stat-icon">📱</span>
+                                <span class="stat-value">0</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Combinations Section -->
+                    <div class="stat-card" id="combinationStatsSection" style="display: none;">
+                        <div class="stat-card-title">🔗 Kombinacijos</div>
+                        <div class="stat-items">
+                            <div class="stat-item" id="statPaperAudio" style="display:none;">
+                                <span class="stat-icon">📖+🎧</span>
+                                <span class="stat-value">0</span>
+                            </div>
+                            <div class="stat-item" id="statPaperDigital" style="display:none;">
+                                <span class="stat-icon">📖+💾</span>
+                                <span class="stat-value">0</span>
+                            </div>
+                            <div class="stat-item" id="statAudioDigital" style="display:none;">
+                                <span class="stat-icon">🎧+💾</span>
+                                <span class="stat-value">0</span>
+                            </div>
+                            <div class="stat-item" id="statAllThree" style="display:none;">
+                                <span class="stat-icon">📖+🎧+💾</span>
+                                <span class="stat-value">0</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Author Countries Section -->
+                    <div class="stat-card" id="countryStatsSection" style="display: none;">
+                        <div class="stat-card-title">🌍 Autorių šalys</div>
+                        <div class="stat-items" id="countryStatsList"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search Section -->
+        <section class="search-section">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Ieškok knygos...">
+            </div>
+            <div class="filter-dropdown" id="filterDropdown">
+                <button class="filter-btn-main" id="filterBtn">
+                    <span>⚙️ Filtrai</span>
+                    <span class="arrow">▼</span>
+                </button>
+                <div class="filter-menu">
+                    <div class="filter-menu-section">
+                        <div class="filter-menu-label">Statusas</div>
+                        <div class="filter-item active" data-type="status" data-value="all">✓ Visos</div>
+                        <div class="filter-item" data-type="status" data-value="read">✓ Perskaityta</div>
+                        <div class="filter-item" data-type="status" data-value="unread">○ Neperskaityta</div>
+                        <div class="filter-item" data-type="status" data-value="listened">🎧 Klausyta</div>
+                        <div class="filter-item" data-type="status" data-value="unlistened">○ Neklausyta</div>
+                        <div class="filter-item" data-type="status" data-value="lent">📤 Paskolinta</div>
+                        <div class="filter-item" data-type="status" data-value="borrowed">📥 Skolinta</div>
+                    </div>
+                    <div class="filter-menu-section">
+                        <div class="filter-menu-label">Savininkas</div>
+                        <div class="filter-item" data-type="owner" data-value="kristina">👩 Kristina</div>
+                        <div class="filter-item" data-type="owner" data-value="darius">👨 Darius</div>
+                        <div class="filter-item" data-type="owner" data-value="nepriskirta">❓ Nepriskirta</div>
+                    </div>
+                    <div class="filter-menu-section">
+                        <div class="filter-menu-label">Žanras</div>
+                        <div class="filter-item" data-type="category" data-value="Grožinė">📖 Grožinė</div>
+                        <div class="filter-item" data-type="category" data-value="Detektyvas">🔍 Detektyvas</div>
+                        <div class="filter-item" data-type="category" data-value="Fantastika">🚀 Fantastika</div>
+                        <div class="filter-item" data-type="category" data-value="Biografija">👤 Biografija</div>
+                        <div class="filter-item" data-type="category" data-value="Psichologija">🧠 Psichologija</div>
+                        <div class="filter-item" data-type="category" data-value="Savišvieta">📚 Savišvieta</div>
+                        <div class="filter-item" data-type="category" data-value="Istorija">📜 Istorija</div>
+                        <div class="filter-item" data-type="category" data-value="Kita">📂 Kita</div>
+                    </div>
+                    <div class="filter-menu-section">
+                        <div class="filter-menu-label">Formatas</div>
+                        <div class="filter-item" data-type="format" data-value="paper">📖 Popierinė</div>
+                        <div class="filter-item" data-type="format" data-value="audio">🎧 Audio</div>
+                        <div class="filter-item" data-type="format" data-value="ebook-md">📝 MD</div>
+                        <div class="filter-item" data-type="format" data-value="ebook-pdf">📄 PDF</div>
+                        <div class="filter-item" data-type="format" data-value="ebook-epub">📱 EPUB</div>
+                    </div>
+                    <div class="filter-menu-section" id="countryFilterSection">
+                        <div class="filter-menu-label">Autorius</div>
+                        <div id="countryFilterItems"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="active-filters" id="activeFilters"></div>
+        </section>
+
+        <!-- Wishlist Section -->
+        <section class="wishlist-section">
+            <div class="wishlist-header" id="wishlistHeader">
+                <h2>📝 Noriu skaityti</h2>
+                <span class="toggle">+</span>
+            </div>
+            <div class="wishlist-content" id="wishlistContent">
+                <!-- Add Wishlist Item Form -->
+                <form class="wishlist-form" id="addWishlistForm">
+                    <div class="wishlist-form-row">
+                        <input type="text" id="wishlistTitle" placeholder="Pavadinimas *" required>
+                        <input type="text" id="wishlistAuthor" placeholder="Autorius">
+                        <button type="submit" class="btn-wishlist-add">+</button>
+                    </div>
+                </form>
+
+                <!-- Wishlist Items -->
+                <div class="wishlist-items" id="wishlistItems"></div>
+
+                <div class="wishlist-empty" id="wishlistEmpty">
+                    Pridėk knygų, kurias nori perskaityti
+                </div>
+            </div>
+        </section>
+
+        <!-- Add Book Section -->
+        <section class="add-section">
+            <div class="add-header" id="addHeader">
+                <h2>➕ Pridėti naują knygą</h2>
+                <span class="toggle">+</span>
+            </div>
+            <form class="add-form" id="addBookForm">
+                <div class="form-row">
+                    <div class="form-group" style="flex: 2;">
+                        <label>Pavadinimas *</label>
+                        <input type="text" id="bookTitle" required placeholder="Knygos pavadinimas">
+                    </div>
+                    <div class="form-group" style="flex: 2;">
+                        <label>Autorius</label>
+                        <input type="text" id="bookAuthor" placeholder="Autoriaus vardas">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group" style="flex: 0 0 100px;">
+                        <label>Serija</label>
+                        <input type="number" id="bookSeriesNumber" placeholder="Nr." min="1">
+                    </div>
+                    <div class="form-group" style="flex: 3;">
+                        <label>Pirma knyga</label>
+                        <input type="text" id="bookSeriesName" placeholder="Pvz.: Haris Poteris">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Autoriaus šalis</label>
+                        <select id="bookAuthorCountry">
+                            <option value="">-- Pasirinkti --</option>
+                            <option value="lt">🇱🇹 Lietuva</option>
+                            <option value="se">🇸🇪 Švedija</option>
+                            <option value="gb">🇬🇧 Jungtinė Karalystė</option>
+                            <option value="us">🇺🇸 JAV</option>
+                            <option value="ru">🇷🇺 Rusija</option>
+                            <option value="de">🇩🇪 Vokietija</option>
+                            <option value="fr">🇫🇷 Prancūzija</option>
+                            <option value="it">🇮🇹 Italija</option>
+                            <option value="es">🇪🇸 Ispanija</option>
+                            <option value="jp">🇯🇵 Japonija</option>
+                            <option value="no">🇳🇴 Norvegija</option>
+                            <option value="dk">🇩🇰 Danija</option>
+                            <option value="pl">🇵🇱 Lenkija</option>
+                            <option value="ie">🇮🇪 Airija</option>
+                            <option value="lb">🇱🇧 Libanas</option>
+                            <option value="ca">🇨🇦 Kanada</option>
+                            <option value="hu">🇭🇺 Vengrija</option>
+                            <option value="other">🌍 Kita</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Išleidimo metai</label>
+                        <input type="number" id="bookPublicationYear" placeholder="pvz. 1999" min="1000" max="2100">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Kalba</label>
+                        <select id="bookLanguage">
+                            <option value="">-- Pasirinkti --</option>
+                            <option value="lt">🇱🇹 Lietuvių</option>
+                            <option value="sv">🇸🇪 Švedų</option>
+                            <option value="en">🇬🇧 Anglų</option>
+                            <option value="ru">🇷🇺 Rusų</option>
+                            <option value="other">🌍 Kita</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Savininkas</label>
+                        <select id="bookOwner">
+                            <option value="">-- Pasirinkti --</option>
+                            <option value="kristina">👩 Kristina</option>
+                            <option value="darius">👨 Darius</option>
+                            <option value="skolinta">📥 Skolinta</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Kategorija</label>
+                        <select id="bookCategory">
+                            <option value="">-- Pasirinkti --</option>
+                            <option value="Grožinė">Grožinė</option>
+                            <option value="Detektyvas">Detektyvas</option>
+                            <option value="Fantastika">Fantastika</option>
+                            <option value="Biografija">Biografija</option>
+                            <option value="Psichologija">Psichologija</option>
+                            <option value="Savišvieta">Savišvieta</option>
+                            <option value="Istorija">Istorija</option>
+                            <option value="Kita">Kita</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Formatai (galima pasirinkti kelis)</label>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <label class="checkbox-label" style="flex: 1; min-width: 120px;">
+                            <input type="checkbox" id="formatPaper" value="paper">
+                            <span class="checkbox-custom"></span>
+                            <span>📖 Popierinė</span>
+                        </label>
+                        <label class="checkbox-label" style="flex: 1; min-width: 120px;">
+                            <input type="checkbox" id="formatAudio" value="audio">
+                            <span class="checkbox-custom"></span>
+                            <span>🎧 Audio</span>
+                        </label>
+                        <label class="checkbox-label" style="flex: 1; min-width: 120px;">
+                            <input type="checkbox" id="formatMd" value="ebook-md">
+                            <span class="checkbox-custom"></span>
+                            <span>📝 MD</span>
+                        </label>
+                        <label class="checkbox-label" style="flex: 1; min-width: 120px;">
+                            <input type="checkbox" id="formatPdf" value="ebook-pdf">
+                            <span class="checkbox-custom"></span>
+                            <span>📄 PDF</span>
+                        </label>
+                        <label class="checkbox-label" style="flex: 1; min-width: 120px;">
+                            <input type="checkbox" id="formatEpub" value="ebook-epub">
+                            <span class="checkbox-custom"></span>
+                            <span>📱 EPUB</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn-add">Pridėti knygą</button>
+                    <span class="duplicate-warning" id="duplicateWarning">⚠️ Panaši knyga jau yra!</span>
+                </div>
+            </form>
+        </section>
+
+        <!-- Books List -->
+        <section class="books-list" id="booksList"></section>
+
+        <div class="empty-state" id="emptyState" style="display: none;">
+            <div class="icon">📖</div>
+            <h3>Nerasta knygų</h3>
+            <p>Pridėk savo pirmąją knygą arba pakeisk paieškos kriterijus</p>
+        </div>
+
+        <!-- Data Actions -->
+        <div class="data-actions">
+            <button class="btn-data" onclick="exportBooks()">📤 Eksportuoti</button>
+            <button class="btn-data" onclick="document.getElementById('importInput').click()">📥 Importuoti</button>
+            <input type="file" id="importInput" accept=".json" style="display: none;">
+            <button class="btn-data" onclick="createBackup()">💾 Backup</button>
+        </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div class="modal-overlay" id="editModal">
+        <div class="modal">
+            <h3>✏️ Redaguoti knygą</h3>
+            <input type="hidden" id="editBookId">
+
+            <div class="form-group">
+                <label>Pavadinimas</label>
+                <input type="text" id="editTitle">
+            </div>
+
+            <div class="form-group">
+                <label>Autorius</label>
+                <input type="text" id="editAuthor">
+            </div>
+
+            <div class="form-row">
+                <div class="form-group" style="flex: 0 0 100px;">
+                    <label>Serija</label>
+                    <input type="number" id="editSeriesNumber" placeholder="Nr." min="1">
+                </div>
+                <div class="form-group" style="flex: 3;">
+                    <label>Pirma knyga</label>
+                    <input type="text" id="editSeriesName" placeholder="Pvz.: Haris Poteris">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Autoriaus šalis</label>
+                    <select id="editAuthorCountry">
+                        <option value="">-- Pasirinkti --</option>
+                        <option value="lt">🇱🇹 Lietuva</option>
+                        <option value="se">🇸🇪 Švedija</option>
+                        <option value="gb">🇬🇧 Jungtinė Karalystė</option>
+                        <option value="us">🇺🇸 JAV</option>
+                        <option value="ru">🇷🇺 Rusija</option>
+                        <option value="de">🇩🇪 Vokietija</option>
+                        <option value="fr">🇫🇷 Prancūzija</option>
+                        <option value="it">🇮🇹 Italija</option>
+                        <option value="es">🇪🇸 Ispanija</option>
+                        <option value="jp">🇯🇵 Japonija</option>
+                        <option value="no">🇳🇴 Norvegija</option>
+                        <option value="dk">🇩🇰 Danija</option>
+                        <option value="pl">🇵🇱 Lenkija</option>
+                        <option value="ie">🇮🇪 Airija</option>
+                        <option value="lb">🇱🇧 Libanas</option>
+                        <option value="ca">🇨🇦 Kanada</option>
+                        <option value="hu">🇭🇺 Vengrija</option>
+                        <option value="other">🌍 Kita</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Išleidimo metai</label>
+                    <input type="number" id="editPublicationYear" placeholder="pvz. 1999" min="1000" max="2100">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Kalba</label>
+                    <select id="editLanguage">
+                        <option value="">-- Pasirinkti --</option>
+                        <option value="lt">🇱🇹 Lietuvių</option>
+                        <option value="sv">🇸🇪 Švedų</option>
+                        <option value="en">🇬🇧 Anglų</option>
+                        <option value="ru">🇷🇺 Rusų</option>
+                        <option value="other">🌍 Kita</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Savininkas</label>
+                    <select id="editOwner">
+                        <option value="">-- Pasirinkti --</option>
+                        <option value="kristina">👩 Kristina</option>
+                        <option value="darius">👨 Darius</option>
+                        <option value="skolinta">📥 Skolinta</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>Kategorija</label>
+                <select id="editCategory">
+                    <option value="">-- Pasirinkti --</option>
+                    <option value="Grožinė">Grožinė</option>
+                    <option value="Detektyvas">Detektyvas</option>
+                    <option value="Fantastika">Fantastika</option>
+                    <option value="Biografija">Biografija</option>
+                    <option value="Psichologija">Psichologija</option>
+                    <option value="Savišvieta">Savišvieta</option>
+                    <option value="Istorija">Istorija</option>
+                    <option value="Kita">Kita</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Formatai (galima pasirinkti kelis)</label>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    <label class="checkbox-label" style="flex: 1; min-width: 120px;">
+                        <input type="checkbox" id="editFormatPaper" value="paper">
+                        <span class="checkbox-custom"></span>
+                        <span>📖 Popierinė</span>
+                    </label>
+                    <label class="checkbox-label" style="flex: 1; min-width: 120px;">
+                        <input type="checkbox" id="editFormatAudio" value="audio">
+                        <span class="checkbox-custom"></span>
+                        <span>🎧 Audio</span>
+                    </label>
+                    <label class="checkbox-label" style="flex: 1; min-width: 120px;">
+                        <input type="checkbox" id="editFormatMd" value="ebook-md">
+                        <span class="checkbox-custom"></span>
+                        <span>📝 MD</span>
+                    </label>
+                    <label class="checkbox-label" style="flex: 1; min-width: 120px;">
+                        <input type="checkbox" id="editFormatPdf" value="ebook-pdf">
+                        <span class="checkbox-custom"></span>
+                        <span>📄 PDF</span>
+                    </label>
+                    <label class="checkbox-label" style="flex: 1; min-width: 120px;">
+                        <input type="checkbox" id="editFormatEpub" value="ebook-epub">
+                        <span class="checkbox-custom"></span>
+                        <span>📱 EPUB</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Įvertinimas</label>
+                <div class="rating-select" id="editRating">
+                    <span class="star" data-rating="1">★</span>
+                    <span class="star" data-rating="2">★</span>
+                    <span class="star" data-rating="3">★</span>
+                    <span class="star" data-rating="4">★</span>
+                    <span class="star" data-rating="5">★</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="editRead">
+                    <span class="checkbox-custom"></span>
+                    <span>✓ Perskaityta</span>
+                </label>
+            </div>
+
+            <div class="form-group">
+                <label class="checkbox-label" style="background: rgba(103, 58, 183, 0.1); border-color: rgba(103, 58, 183, 0.3);">
+                    <input type="checkbox" id="editListened">
+                    <span class="checkbox-custom" style="border-color: #673ab7;"></span>
+                    <span>🎧 Klausyta</span>
+                </label>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Pradėta skaityti</label>
+                    <input type="date" id="editStartDate">
+                </div>
+                <div class="form-group">
+                    <label>Baigta skaityti</label>
+                    <input type="date" id="editEndDate">
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Paskolinta (kam?)</label>
+                    <input type="text" id="editLentTo" placeholder="Pvz.: Marijai">
+                </div>
+                <div class="form-group">
+                    <label>Skolinta (iš ko?)</label>
+                    <input type="text" id="editBorrowedFrom" placeholder="Pvz.: Jono">
+                </div>
+            </div>
+            
+            <div class="modal-actions">
+                <button type="button" class="btn-cancel" onclick="closeEditModal()">Atšaukti</button>
+                <button type="button" class="btn-save" onclick="saveBookEdit()">Išsaugoti</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Wishlist Modal -->
+    <div class="modal-overlay" id="editWishlistModal">
+        <div class="modal modal-small">
+            <h3>✏️ Redaguoti</h3>
+            <input type="hidden" id="editWishlistId">
+
+            <div class="form-group">
+                <label>Pavadinimas</label>
+                <input type="text" id="editWishlistTitle">
+            </div>
+
+            <div class="form-group">
+                <label>Autorius</label>
+                <input type="text" id="editWishlistAuthor">
+            </div>
+
+            <div class="modal-actions">
+                <button type="button" class="btn-cancel" onclick="closeEditWishlistModal()">Atšaukti</button>
+                <button type="button" class="btn-save" onclick="saveWishlistEdit()">Išsaugoti</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
+    <!-- PWA Install Prompt -->
+    <div class="pwa-install-prompt" id="pwaInstallPrompt">
+        <div class="pwa-prompt-content">
+            <div class="pwa-prompt-icon">📚</div>
+            <div class="pwa-prompt-text">
+                <strong>Įdiegti programą</strong>
+                <span>Naudok kaip atskirą programą!</span>
+            </div>
+            <button class="pwa-prompt-install" id="pwaInstallBtn">Įdiegti</button>
+            <button class="pwa-prompt-dismiss" id="pwaDismissBtn">✕</button>
+        </div>
+    </div>
+
+    <!-- PWA Update Prompt -->
+    <div class="pwa-update-prompt" id="pwaUpdatePrompt">
+        <div class="pwa-prompt-content">
+            <div class="pwa-prompt-icon">🔄</div>
+            <div class="pwa-prompt-text">
+                <strong>Naujas atnaujinimas!</strong>
+                <span>Paspausk, kad atnaujinti programą</span>
+            </div>
+            <button class="pwa-prompt-update" id="pwaUpdateBtn">Atnaujinti</button>
+            <button class="pwa-prompt-dismiss" id="pwaUpdateDismissBtn">✕</button>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/pwa.js') }}"></script>
+</body>
+</html>

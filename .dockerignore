@@ -1,0 +1,47 @@
+# Virtual environment
+venv/
+env/
+ENV/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Git
+.git/
+.gitignore
+
+# Docker
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+
+# PM2
+ecosystem.config.js
+
+# Backups (optional - remove if you want backups in container)
+backups/
+
+# Claude
+.claude/
+
+# Documentation
+README.md
+_PALEIDIMAS.txt
