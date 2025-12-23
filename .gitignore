@@ -33,9 +33,19 @@ ecosystem.config.js
 # Backups (optional - jei nori commit'inti backups, išimk šią eilutę)
 backups/
 
-# Data files (optional - jei nori commit'inti duomenis, išimk)
-# books.json
-# wishlist.json
+# Backend files (kept only locally, not in GitHub)
+app.py
+stats.py
+requirements.txt
+Dockerfile
+docker-compose.yml
+.dockerignore
+DEPLOYMENT.md
+_PALEIDIMAS.txt
+knygu-biblioteka-schema.json
+templates/
+books.json
+wishlist.json
 
 # OS
 Thumbs.db

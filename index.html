@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>📚 Knygų Biblioteka</title>
-    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
-    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+    <link rel="icon" type="image/x-icon" href="static/favicon.ico">
+    <link rel="manifest" href="static/manifest.json">
     <meta name="theme-color" content="#f4d03f">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Knygos">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="static/css/style.css">
 </head>
 <body>
     <div class="container">
@@ -431,7 +431,7 @@
                     </select>
                 </div>
             </div>
-            
+
             <div class="form-group">
                 <label>Kategorija</label>
                 <select id="editCategory">
@@ -515,7 +515,7 @@
                     <input type="date" id="editEndDate">
                 </div>
             </div>
-            
+
             <div class="form-row">
                 <div class="form-group">
                     <label>Paskolinta (kam?)</label>
@@ -526,7 +526,7 @@
                     <input type="text" id="editBorrowedFrom" placeholder="Pvz.: Jono">
                 </div>
             </div>
-            
+
             <div class="modal-actions">
                 <button type="button" class="btn-cancel" onclick="closeEditModal()">Atšaukti</button>
                 <button type="button" class="btn-save" onclick="saveBookEdit()">Išsaugoti</button>
@@ -586,7 +586,9 @@
         </div>
     </div>
 
-    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/pwa.js') }}"></script>
+    <!-- Config -->
+    <script src="static/js/config.js"></script>
+    <script src="static/js/main.js"></script>
+    <script src="static/js/pwa.js"></script>
 </body>
 </html>

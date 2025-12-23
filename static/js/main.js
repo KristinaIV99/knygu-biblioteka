@@ -142,7 +142,7 @@
                     format: filters.format
                 });
                 
-                const response = await fetch(`/api/search?${params}`);
+                const response = await fetch(`${API_BASE_URL}/api/search?${params}`);
                 const books = await response.json();
                 
                 renderBooks(books);
@@ -159,7 +159,7 @@
                 if (filters.language) {
                     params.append('language', filters.language);
                 }
-                const response = await fetch(`/api/stats?${params}`);
+                const response = await fetch(`${API_BASE_URL}/api/stats?${params}`);
                 const stats = await response.json();
                 
                 document.getElementById('statPaperRead').textContent = stats.paperRead || 0;
@@ -423,7 +423,7 @@
             };
 
             try {
-                const response = await fetch('/api/books', {
+                const response = await fetch(`${API_BASE_URL}/api/books`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(data)
@@ -456,7 +456,7 @@
                     return;
                 }
                 try {
-                    const response = await fetch(`/api/check-duplicate?title=${encodeURIComponent(this.value)}`);
+                    const response = await fetch(`${API_BASE_URL}/api/check-duplicate?title=${encodeURIComponent(this.value)}`);
                     const data = await response.json();
                     document.getElementById('duplicateWarning').classList.toggle('show', data.duplicate);
                 } catch (e) {}
@@ -466,7 +466,7 @@
         // Toggle read
         async function toggleRead(id) {
             try {
-                const response = await fetch(`/api/books/${id}/toggle-read`, { method: 'POST' });
+                const response = await fetch(`${API_BASE_URL}/api/books/${id}/toggle-read`, { method: 'POST' });
                 if (response.ok) {
                     loadBooks();
                     showToast('Atnaujinta');
@@ -486,7 +486,7 @@
 
             // Then update server in background
             try {
-                const response = await fetch(`/api/books/${id}/toggle-verified`, { method: 'POST' });
+                const response = await fetch(`${API_BASE_URL}/api/books/${id}/toggle-verified`, { method: 'POST' });
                 if (!response.ok) {
                     // If failed, revert the change
                     if (button) {
@@ -507,7 +507,7 @@
         async function deleteBook(id) {
             if (!confirm('Ar tikrai nori ištrinti?')) return;
             try {
-                const response = await fetch(`/api/books/${id}`, { method: 'DELETE' });
+                const response = await fetch(`${API_BASE_URL}/api/books/${id}`, { method: 'DELETE' });
                 if (response.ok) {
                     loadBooks();
                     showToast('Ištrinta', 'warning');
@@ -520,7 +520,7 @@
         // Edit modal
         async function openEditModal(id) {
             try {
-                const response = await fetch('/api/books');
+                const response = await fetch(`${API_BASE_URL}/api/books`);
                 const books = await response.json();
                 const book = books.find(b => b.id === id);
                 if (!book) return;
@@ -623,7 +623,7 @@
             };
 
             try {
-                const response = await fetch(`/api/books/${id}`, {
+                const response = await fetch(`${API_BASE_URL}/api/books/${id}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(data)
@@ -655,7 +655,7 @@
 
         // Export
         function exportBooks() {
-            window.location.href = '/api/export';
+            window.location.href = `${API_BASE_URL}/api/export`;
             showToast('Eksportuojama...', 'info');
         }
 
@@ -668,7 +668,7 @@
             formData.append('file', file);
 
             try {
-                const response = await fetch('/api/import', {
+                const response = await fetch(`${API_BASE_URL}/api/import`, {
                     method: 'POST',
                     body: formData
                 });
@@ -689,7 +689,7 @@
         // Backup
         async function createBackup() {
             try {
-                const response = await fetch('/api/backup', { method: 'POST' });
+                const response = await fetch(`${API_BASE_URL}/api/backup`, { method: 'POST' });
                 if (response.ok) {
                     showToast('Backup sukurtas!', 'info');
                 }
@@ -717,7 +717,7 @@
         // Load wishlist
         async function loadWishlist() {
             try {
-                const response = await fetch('/api/wishlist');
+                const response = await fetch(`${API_BASE_URL}/api/wishlist`);
                 const items = await response.json();
                 renderWishlist(items);
             } catch (error) {
@@ -761,7 +761,7 @@
             };
 
             try {
-                const response = await fetch('/api/wishlist', {
+                const response = await fetch(`${API_BASE_URL}/api/wishlist`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(data)
@@ -780,7 +780,7 @@
         // Open edit wishlist modal
         async function openEditWishlistModal(id) {
             try {
-                const response = await fetch('/api/wishlist');
+                const response = await fetch(`${API_BASE_URL}/api/wishlist`);
                 const items = await response.json();
                 const item = items.find(i => i.id === id);
                 if (!item) return;
@@ -810,7 +810,7 @@
             };
 
             try {
-                const response = await fetch(`/api/wishlist/${id}`, {
+                const response = await fetch(`${API_BASE_URL}/api/wishlist/${id}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(data)
@@ -830,7 +830,7 @@
         async function deleteWishlistItem(id) {
             if (!confirm('Ar tikrai nori ištrinti?')) return;
             try {
-                const response = await fetch(`/api/wishlist/${id}`, { method: 'DELETE' });
+                const response = await fetch(`${API_BASE_URL}/api/wishlist/${id}`, { method: 'DELETE' });
                 if (response.ok) {
                     loadWishlist();
                     showToast('Ištrinta', 'warning');
