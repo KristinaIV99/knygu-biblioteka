@@ -47,6 +47,10 @@ templates/
 books.json
 wishlist.json
 
+# Local documentation (not for GitHub)
+KAIP_NAUDOTI.md
+FRONTEND_BACKEND_SETUP.md
+
 # OS
 Thumbs.db
 .DS_Store
