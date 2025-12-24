@@ -1,15 +1,17 @@
 // Backend API Configuration
-// TAILSCALE setup su MagicDNS:
+// TAILSCALE SERVE setup su custom path:
 // - PC (lokaliai): localhost:5123
-// - Telefonas/GitHub Pages: Tailscale hostname
+// - Telefonas/GitHub Pages: Tailscale Serve su HTTPS + custom path!
 
 const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-    ? 'http://localhost:5123'                                    // PC lokaliai (Docker)
-    : 'http://desktop-cnopv70.taild60bf0.ts.net:5123';          // Telefonas per Tailscale
+    ? 'http://localhost:5123'                                              // PC lokaliai (Docker)
+    : 'https://desktop-cnopv70.taild60bf0.ts.net/knygu-biblioteka';       // Tailscale Serve (HTTPS!)
 
-// SAUGUMAS:
-// - HTTP per Tailscale YRA SAUGUS (WireGuard šifravimas)
-// - Hostname vietoj IP - gražiau ir privatiau
-// - Veikia tik su Tailscale VPN - niekas kitas negali pasiekti
-//
-// Jei nori HTTPS: https://login.tailscale.com/admin/dns → Enable HTTPS Certificates
+// PRIVALUMAI:
+// ✅ HTTPS automatiškai (Tailscale Serve)
+// ✅ Custom path "/knygu-biblioteka" - aiškus projekto pavadinimas
+// ✅ Galima turėti kelis projektus skirtingais path'ais:
+//    /knygu-biblioteka - ši programa
+//    /nuotraukos       - kitas projektas
+//    /uzrasai          - dar vienas projektas
+// ✅ Saugus - veikia tik per Tailscale VPN
